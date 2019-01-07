@@ -20,86 +20,33 @@
  */
 
 metadata {
-    definition (name: "Qubino Flush 2 Relays", namespace: "erocm123", author: "Eric Maycock") {
-        capability "Actuator"
-        capability "Sensor"
-        capability "Switch"
-        capability "Polling"
-        capability "Configuration"
-        capability "Refresh"
-        capability "Energy Meter"
-        capability "Power Meter"
-        capability "Temperature Measurement"
-        capability "Health Check"
+	definition (name: "Qubino Flush 2 Relays", namespace: "erocm123", author: "Eric Maycock") {
+		capability "Actuator"
+		capability "Sensor"
+		capability "Switch"
+		capability "Polling"
+		capability "Configuration"
+		capability "Refresh"
+		capability "Energy Meter"
+		capability "Power Meter"
+		//capability "Temperature Measurement"
+		capability "Health Check"
         
-        command "reset"
-	command "childOn"
-        command "childOff"
-        command "childRefresh"
-        command "childReset"
+		command "reset"
+		command "childOn"
+		command "childOff"
+		command "childRefresh"
+		command "childReset"
 
-        fingerprint mfr: "0159", prod: "0002", model: "0051"
-        fingerprint deviceId: "0x1001", inClusters:"0x5E,0x86,0x72,0x5A,0x73,0x20,0x27,0x25,0x32,0x60,0x85,0x8E,0x59,0x70", outClusters:"0x20"
-	fingerprint deviceId: "0x1001", inClusters:"0x5E,0x86,0x72,0x5A,0x73,0x20,0x27,0x25,0x32,0x31,0x60,0x85,0x8E,0x59,0x70", outClusters:"0x20" // With temp sensor
-    }
+		fingerprint mfr: "0159", prod: "0002", model: "0051"
+		fingerprint deviceId: "0x1001", inClusters:"0x5E,0x86,0x72,0x5A,0x73,0x20,0x27,0x25,0x32,0x60,0x85,0x8E,0x59,0x70", outClusters:"0x20"
+		//fingerprint deviceId: "0x1001", inClusters:"0x5E,0x86,0x72,0x5A,0x73,0x20,0x27,0x25,0x32,0x31,0x60,0x85,0x8E,0x59,0x70", outClusters:"0x20" // With temp sensor
+	}
 
-    simulator {
-    }
-
-    preferences {
-        input description: "Once you change values on this page, the corner of the \"configuration\" icon will change orange until all configuration parameters are updated.", title: "Settings", displayDuringSetup: false, type: "paragraph", element: "paragraph"
-        generate_preferences(configuration_model())
-    }
-
-    tiles {
-        multiAttributeTile(name:"switch", type: "lighting", width: 6, height: 4, canChangeIcon: true){
-            tileAttribute ("device.switch", key: "PRIMARY_CONTROL") {
-                attributeState "off", label:'${name}', action:"switch.on", icon:"st.switches.switch.off", backgroundColor:"#ffffff", nextState:"turningOn"
-                attributeState "on", label:'${name}', action:"switch.off", icon:"st.switches.switch.on", backgroundColor:"#00a0dc", nextState:"turningOff"
-                attributeState "turningOff", label:'${name}', action:"switch.on", icon:"st.switches.switch.off", backgroundColor:"#ffffff", nextState:"turningOn"
-                attributeState "turningOn", label:'${name}', action:"switch.off", icon:"st.switches.switch.on", backgroundColor:"#00a0dc", nextState:"turningOff"
-            }
-            tileAttribute ("statusText", key: "SECONDARY_CONTROL") {
-                attributeState "statusText", label:'${currentValue}'
-            }
-        }
-        standardTile("refresh", "device.switch", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
-            state "default", label:"", action:"refresh.refresh", icon:"st.secondary.refresh"
-        }
-        standardTile("configure", "device.needUpdate", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
-            state "NO" , label:'', action:"configuration.configure", icon:"st.secondary.configure"
-            state "YES", label:'', action:"configuration.configure", icon:"https://github.com/erocm123/SmartThingsPublic/raw/master/devicetypes/erocm123/qubino-flush-1d-relay.src/configure@2x.png"
-        }
-        valueTile("energy", "device.energy", decoration: "flat", width: 2, height: 2) {
-            state "default", label:'${currentValue} kWh'
-        }
-        valueTile("power", "device.power", decoration: "flat", width: 2, height: 2) {
-            state "default", label:'${currentValue} W'
-        }
-
-        standardTile("reset", "device.energy", inactiveLabel: false, decoration: "flat", width: 2, height: 2) {
-            state "default", label:'reset kWh', action:"reset"
-        }
-        valueTile("temperature", "device.temperature", inactiveLabel: false, width: 2, height: 2) {
-            state "temperature", label:'${currentValue}°',
-            backgroundColors:
-            [
-                [value: 31, color: "#153591"],
-                [value: 44, color: "#1e9cbb"],
-                [value: 59, color: "#90d2a7"],
-                [value: 74, color: "#44b621"],
-                [value: 84, color: "#f1d801"],
-                [value: 95, color: "#d04e00"],
-                [value: 96, color: "#bc2323"]
-            ]
-        }
-
-        main(["switch","switch1", "switch2"])
-        details(["switch",
-                "temperature","refresh","configure",
-                "reset"
-                ])
-   }
+	preferences {
+		input description: "Once you change values on this page, the corner of the \"configuration\" icon will change orange until all configuration parameters are updated.", title: "Settings", displayDuringSetup: false, type: "paragraph", element: "paragraph"
+		generate_preferences(configuration_model())
+	}
 }
 
 def parse(String description) {
