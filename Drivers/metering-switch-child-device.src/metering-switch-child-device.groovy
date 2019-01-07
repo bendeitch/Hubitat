@@ -18,11 +18,11 @@ metadata {
 		capability "Switch"
 		capability "Actuator"
 		capability "Sensor"
-        capability "Energy Meter"
-        capability "Power Meter"
-        capability "Refresh"
+		capability "Energy Meter"
+		capability "Power Meter"
+		capability "Refresh"
         
-        command "reset"
+		command "reset"
 	}
 }
 
